@@ -1,0 +1,103 @@
+import HomePage from './components/HomePage.vue'
+import Dashboard from './views/Dashboard.vue'
+import ProductS from './views/ProductS'
+import Task from './views/Task'
+import Reporting from './views/Reporting'
+import User from './views/User'
+import Support from './views/Support'
+import Setting from './views/Setting'
+import Login from './components/Login'
+import VueRouter from 'vue-router'
+import Vue from 'vue'
+import { routerS } from './utils/constants'
+
+
+Vue.use(VueRouter)
+
+const routes = [
+    {
+        //Redirection, used to point to which route to jump to as soon as the web page is opened
+        path: '/',
+        redirect: '/login'
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/homepage',
+        component: HomePage,
+        children: [// start nesting routes. All the routes below are sub routes of the main route
+
+            {
+                path: routerS.views[2].path,
+                name: routerS.views[2].name,
+                component: () => import('./views/HomeS'),
+
+            },
+            {
+                path: 'dashboard',
+                name: 'Dashboard',
+                component: Dashboard,
+            },
+            {
+                path: 'products',
+                name: 'ProductS',
+                component: ProductS,
+                children: [{
+                    path: 'car/:id',
+                    name: 'car',
+                    component: () => import('./views/Car'),
+
+                },
+                {
+                    path: 'motor/:id',
+                    name: 'motor',
+                    component: () => import('./views/Motor'),
+
+                },
+                ],
+            },
+
+            {
+                path: 'task',
+                name: 'Task',
+                component: Task,
+            },
+            {
+                path: 'reporting',
+                name: 'Reporting',
+                component: Reporting,
+            },
+            {
+                path: 'user',
+                name: 'User',
+                component: User,
+            },
+            {
+                path: 'support',
+                name: 'Support',
+                component: Support,
+            },
+            {
+                path: 'setting',
+                name: 'Setting',
+                component: Setting,
+            },
+        ]
+    },
+    {
+        path: '/vehicle/:id',
+        name: 'vehicle',
+        component: () => import('./views/VehicleS.vue'),
+        props: true,
+    },
+
+]
+const router = new VueRouter({
+    mode: 'history',
+    routes,
+})
+
+export default router

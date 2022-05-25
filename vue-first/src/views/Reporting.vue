@@ -1,0 +1,5 @@
+<template>
+    <h1>Reporting</h1>
+    
+</template>
+

@@ -1,0 +1,56 @@
+.el-item-9 {
+    background-color: rgb(255, 255, 255, 0.4);
+    padding: 10px;
+    margin-left: 20px;
+    border-radius: 10px;
+    margin-right: 15%;
+}
+
+.el-main {
+    text-align: left;
+}
+
+.el-menu {
+    padding-left: 10px;
+}
+
+.el-menu-item {
+    padding-bottom: 5px;
+    margin-right: 10px;
+    color: white;
+    height: 30px;
+    line-height: 30px;
+
+}
+
+.el-menu-item:focus {
+    color: black;
+    background-color: rgb(255, 255, 255, 0.4);
+}
+
+ul {
+    list-style: none;
+}
+
+
+.el-aside {
+    background-color: rgb(61, 21, 107);
+    color: white;
+    font-weight: bold;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.el-input__inner {
+    background-color: rgb(255, 255, 255, 0.4);
+    border: 1;
+
+}
+
+.el-menu {
+    background-color: rgb(61, 21, 107);
+}
+
+body {
+    margin: 0;
+}
