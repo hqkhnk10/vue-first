@@ -3,16 +3,15 @@
 <el-dialog
   title="Edit"
   :visible.sync="dialogVisible"
-        :close-on-click-modal="false"
-
+  :close-on-click-modal="false"
   width="30%"
   >
   <el-form :rules="rul">
   <el-form-item
-          prop="brand"
         >
+        {{cars[i]}}
 Car Model <br>
-<el-input v-model="cars[i].brand"><br></el-input>
+<el-input v-model="cars[i].model" v-on:input="Change(0,$event)"><br></el-input>
  </el-form-item>
  <el-form-item
           prop="price"
@@ -139,7 +138,7 @@ export default{
             i,valArr,addForm,doList,doForm,trig,
             search:this.$route.params.id,
              rul: {
-        brand: [
+        model: [
           {
             required: true,
             message: "Vui lòng không để trống",
@@ -223,7 +222,9 @@ export default{
       }
     },
     methods: {
-      
+      consol(){
+        console.log(2)
+      },
       searchInput(){
         this.displaySearch=!this.displaySearch;
       },
@@ -242,6 +243,7 @@ export default{
       Change(idx,val){
         valArr[idx]=val;
         idxArr.push(idx);
+        console.log(valArr,idxArr);
       },
       cancel(){
          this.dialogVisible=false;
