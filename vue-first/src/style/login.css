@@ -83,7 +83,7 @@ h1 {
     height: 600px;
 }
 
-form {
+.f1 form {
     position: absolute;
     top: 15%;
     left: 10%;

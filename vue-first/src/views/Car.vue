@@ -1,41 +1,17 @@
 <template>
     <div>
-<el-dialog
-  title="Edit"
-  :visible.sync="dialogVisible"
-        :close-on-click-modal="false"
-
-  width="30%"
-  >
-  <el-form :rules="rul">
-  <el-form-item
-          prop="model"
-        >
-Car Model <br>
-<el-input v-model="cars[i].model"><br></el-input>
- </el-form-item>
- <el-form-item
-          prop="price"
-        >
-Car Price <br><input  :value="cars[i].price" @change="Change(1,$event.target.value)"><br>
- </el-form-item>
-<el-form-item
-          prop="number"
-        >
-Car Left <br><input  :value="cars[i].number" @change="Change(2,$event.target.value)"><br>
-  </el-form-item>
-  </el-form>
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="cancel">Cancel</el-button>
-    <el-button type="primary" @click="confirm">Confirm</el-button>
-  </span>
-</el-dialog>
  <el-button type="primary" @click="searchInput">Search</el-button>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
- <el-button type="primary" @click="addForm=!addForm">Add</el-button>
+ <el-button type="primary" @click="addForm=!addForm,showDialogueForm=!showDialogueForm">Add</el-button>
  <el-button type="primary" @click="doForm=!doForm">Do List</el-button>
 <div v-show="doForm">{{doList}}</div>
 
+<dialogue-form 
+title="Hello"
+:formType="formType"
+:dialogVisible="showDialogueForm"
+:data="cars[i]"
+/>
 
 <el-form v-show="addForm" size="mini">
 
@@ -116,6 +92,8 @@ Car Left <br><input  :value="cars[i].number" @change="Change(2,$event.target.val
 </template>
 
 <script>
+import dialogueFormVue from '../components/dialogueForm.vue';
+
 var carsObj =  require('../utils/cars.js');
 var cars = carsObj.cars;
 var valArr =[];
@@ -125,11 +103,14 @@ var idxArr =[];
 var doList=[];
 var trig=false;
 export default{
+  components:{
+    'dialogue-form':dialogueFormVue
+  },
     data(){
         return{
             cars,newBrand:'',newModel:'',newIntroduction:'',newPrice:'',newSpeed:'',newWeight:'',newNumber:'',newImg:'',
             dialogVisible:false,id,idxArr,displaySearch:false,searchModel:'',
-            i,valArr,addForm:false,doList,doForm:false,trig,
+            i,valArr,addForm:false,doList,doForm:false,trig,showDialogueForm:false,
             search:this.$route.params.id,
              rul: {
         model: [
@@ -213,15 +194,25 @@ export default{
            }
           return cars;
         }
+      },
+      formType(){
+        if(this.addForm==true) 
+        {return 1;}
+        if(this.dialogVisible==true) 
+        {return 2;}
+        return 0;
       }
     },
     methods: {
-      
+      consol(){
+        console.log(2)
+      },
       searchInput(){
         this.displaySearch=!this.displaySearch;
       },
       handleEdit(row) {
         this.dialogVisible=true;
+        this.showDialogueForm=true;
         this.i=cars.findIndex(car => car== row);
         this.trig=true;
         doList.push('Edit '+ row.brand)
@@ -234,7 +225,8 @@ export default{
       },
       Change(idx,val){
         valArr[idx]=val;
-        idxArr.push(idx);
+        idxArr[this.i]=idx;
+        console.log(valArr,idxArr);
       },
       cancel(){
          this.dialogVisible=false;

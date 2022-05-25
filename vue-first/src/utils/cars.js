@@ -67,9 +67,12 @@ var i, j;
 var carBrand = true;
 var d = new Date("2012-12-20");
 
-for (i = 0; i < cars.length; i++) {
+/*for (i = 0; i < cars.length; i++) {
     cars[i].price = format2(cars[i].price, '$ ');
 }
+function format2(n, currency) {
+    return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+}*/
 for (i = 0; i < cars.length; i++) {
     for (j = 0; j < carList.length; j++) {
         if (carList[j].brand == cars[i].brand) {
@@ -86,9 +89,7 @@ for (i = 0; i < cars.length; i++) {
     }
 }
 
-function format2(n, currency) {
-    return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-}
+
 
 export { cars, carList }
 
