@@ -9,10 +9,10 @@
   >
   <el-form :rules="rul">
   <el-form-item
-          prop="brand"
+          prop="model"
         >
 Car Model <br>
-<el-input v-model="cars[i].brand"><br></el-input>
+<el-input v-model="cars[i].model"><br></el-input>
  </el-form-item>
  <el-form-item
           prop="price"
@@ -118,28 +118,21 @@ Car Left <br><input  :value="cars[i].number" @change="Change(2,$event.target.val
 <script>
 var carsObj =  require('../utils/cars.js');
 var cars = carsObj.cars;
-var dialogVisible=false;
-var displaySearch = false;
-var addForm=false;
-var doForm=false;
 var valArr =[];
 var i=0;
 var id=5;
-var newBrand='',newModel='',newPrice='',newSpeed='',newWeight='';
-var newNumber='',newIntroduction='',newImg='';
-var searchModel='';
 var idxArr =[];
 var doList=[];
 var trig=false;
 export default{
     data(){
         return{
-            cars,newBrand,newModel,newIntroduction,newPrice,newSpeed,newWeight,newNumber,newImg,
-            dialogVisible,id,idxArr,displaySearch,searchModel,
-            i,valArr,addForm,doList,doForm,trig,
+            cars,newBrand:'',newModel:'',newIntroduction:'',newPrice:'',newSpeed:'',newWeight:'',newNumber:'',newImg:'',
+            dialogVisible:false,id,idxArr,displaySearch:false,searchModel:'',
+            i,valArr,addForm:false,doList,doForm:false,trig,
             search:this.$route.params.id,
              rul: {
-        brand: [
+        model: [
           {
             required: true,
             message: "Vui lòng không để trống",
