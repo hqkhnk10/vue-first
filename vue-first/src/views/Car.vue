@@ -10,9 +10,13 @@
 title="Hello"
 :formType="formType"
 :dialogVisible="showDialogueForm"
-:data="cars[i]"
-/>
+:dataa="dataa"
+@toggleDialogueForm="showDialogueForm=!showDialogueForm"
+@edit="updateData"
 
+/>
+{{cars[i]}}
+{{showDialogueForm}}
 <el-form v-show="addForm" size="mini">
 
   <el-form-item label="Brand">
@@ -111,60 +115,7 @@ export default{
             cars,newBrand:'',newModel:'',newIntroduction:'',newPrice:'',newSpeed:'',newWeight:'',newNumber:'',newImg:'',
             dialogVisible:false,id,idxArr,displaySearch:false,searchModel:'',
             i,valArr,addForm:false,doList,doForm:false,trig,showDialogueForm:false,
-            search:this.$route.params.id,
-             rul: {
-        model: [
-          {
-            required: true,
-            message: "Vui lòng không để trống",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 25,
-            message: "Từ 3 - 25 ký tự",
-            trigger: "blur",
-          },
-          {
-            required: true,
-            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
-            message: "không chứa ký tự đặc biệt",
-            trigger: "blur",
-          },
-          // {
-          //   required: true,
-          //   pattern: /[^a-z0-9A-Z_\x{00C0}-\x{00FF}\x{1EA0}-\x{1EFF}]/u,
-          //   message: " không được chứa khoảng trắng",
-          //   trigger: "blur",
-          // },
-        ],
-        price: [
-          {
-            required: true,
-            message: "Vui lòng không để trống",
-            trigger: "blur",
-          },
-          // {
-          //   type: "number",
-          //   pattern:
-          //     "^(?=\\d{2}([-.,\\/])\\d{2}\\1\\d{4}$)(?:0[1-9]|1\\d|[2][0-8]|29(?!.02.(?!(?!(?:[02468][1-35-79]|[13579][0-13-57-9])00)\\d{2}(?:[02468][048]|[13579][26])))|30(?!.02)|31(?=.(?:0[13578]|10|12))).(?:0[1-9]|1[012]).\\d{4}$",
-          //   message: "Kiểu nhập Ngày-tháng-năm",
-          //   trigger: "blur",
-          // },
-        ],
-        number: [
-          {
-            required: true,
-            message: "Vui lòng không để trống",
-            trigger: "blur",
-          },
-          {
-            type: "number",
-            message: "Vui lòng nhập ký tự là số",
-            trigger: "blur",
-          },
-        ],
-      },
+            search:this.$route.params.id,dataa:'',
         }
     },
     watch: {
@@ -204,15 +155,17 @@ export default{
       }
     },
     methods: {
-      consol(){
-        console.log(2)
+      updateData(abc){
+        console.log(cars, abc)
       },
       searchInput(){
         this.displaySearch=!this.displaySearch;
       },
       handleEdit(row) {
+        this.dataa=row;
+        this.dataa=JSON.stringify(this.dataa)
         this.dialogVisible=true;
-        this.showDialogueForm=true;
+        this.showDialogueForm=!this.showDialogueForm;
         this.i=cars.findIndex(car => car== row);
         this.trig=true;
         doList.push('Edit '+ row.brand)
