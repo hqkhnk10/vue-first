@@ -1,20 +1,21 @@
 <template>
   <div>
-    {{ruleForm}}
-{{dialogVisible}}
   <el-dialog
-  title="Tips"
+  title="edit"
   :visible.sync="dialogVisible"
   :close-on-click-modal="false"
   :before-close="handleClose"
   width="30%">
   
-<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" >
   <el-form-item label="model" prop="model">
     <el-input  v-model="ruleForm.model" autocomplete="off"></el-input>
   </el-form-item>
   <el-form-item label="price" prop="price">
     <el-input v-model.number="ruleForm.price"></el-input>
+  </el-form-item>
+  <el-form-item label="number" prop="number">
+    <el-input v-model.number="ruleForm.number"></el-input>
   </el-form-item>
   <el-form-item>
     <el-button type="primary" @click="submitForm('ruleForm')">Submit</el-button>
@@ -31,7 +32,7 @@ props: {
   dialogVisible:{
     type: Boolean,
   },
-  dataa: {
+  editData: {
       type: String,
       description: "Noi dung truyen vao",
     },
@@ -39,10 +40,11 @@ props: {
 
     data() {
       return {
-        dialogVisible1:false,
         ruleForm:{
+          id:'',
           model:'',
           price:'',
+          number:'',
         },
         rules: {
         model: [
@@ -60,8 +62,13 @@ props: {
           ],
           price: [
       { required: true, message: 'price is required'},
-      { type: 'number', message: 'price must be a number'}
-    ]
+      { type: 'number', message: 'price must be a number'},
+    ],
+    number: [
+      { required: true, message: 'price is required'},
+      { type: 'number', message: 'price must be a number'},
+    ],
+   
       },
     };
     },
@@ -70,6 +77,7 @@ props: {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$emit('edit',this.ruleForm)
+        this.$emit('toggleDialogueForm')
              this.$notify.success({
               title: "Success",
               message: "Success edit",
@@ -85,16 +93,19 @@ props: {
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+         this.dialogVisible1=false;
         this.$emit('toggleDialogueForm')
       },
     handleClose(){
 this.$emit('toggleDialogueForm')    },
     },
     watch: {
-      dataa: function(){
-        var obj = JSON.parse(this.dataa)
+      editData: function(){
+        var obj = JSON.parse(this.editData)
+        this.ruleForm.id=obj.id
         this.ruleForm.model=obj.model
         this.ruleForm.price=obj.price
+        this.ruleForm.number=obj.number
       },
       dialogVisible: function(){
         this.dialogVisible1 = this.dialogVisible

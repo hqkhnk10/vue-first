@@ -2,50 +2,32 @@
     <div>
  <el-button type="primary" @click="searchInput">Search</el-button>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
- <el-button type="primary" @click="addForm=!addForm,showDialogueForm=!showDialogueForm">Add</el-button>
+ <el-button type="primary" @click="add">Add</el-button>
  <el-button type="primary" @click="doForm=!doForm">Do List</el-button>
 <div v-show="doForm">{{doList}}</div>
-
 <dialogue-form 
-title="Hello"
-:formType="formType"
 :dialogVisible="showDialogueForm"
-:dataa="dataa"
+:editData="editData"
 @toggleDialogueForm="showDialogueForm=!showDialogueForm"
 @edit="updateData"
-
 />
-{{cars[i]}}
-{{showDialogueForm}}
-<el-form v-show="addForm" size="mini">
-
-  <el-form-item label="Brand">
-    <el-input v-model="newBrand"></el-input>
-  </el-form-item>
-  <el-form-item label="Model">
-    <el-input v-model="newModel"></el-input>
-  </el-form-item>
-  <el-form-item label="Speed">
-    <el-input v-model="newSpeed"></el-input>
-  </el-form-item>
-  <el-form-item label="Weight">
-    <el-input v-model="newWeight"></el-input>
-  </el-form-item>
-  <el-form-item label="Introduction">
-    <el-input v-model="newIntroduction"></el-input>
-  </el-form-item>
-  <el-form-item label="Number">
-    <el-input v-model="newNumber"></el-input>
-  </el-form-item>
-  <el-form-item label="Price">
-    <el-input v-model="newPrice"></el-input>
-  </el-form-item>
-  <el-form-item label="Img">
-    <el-input v-model="newImg"></el-input>
-  </el-form-item>
-  <el-button type="primary" @click="add">Create</el-button>
-   <el-button @click="addForm=false">Cancel</el-button>
-</el-form>
+<add-dialog
+:dialogVisible="AddshowDialogueForm"
+:editData="addData"
+@toggleDialogueForm="AddshowDialogueForm=!AddshowDialogueForm"
+@add="addData"
+/>
+<el-dialog
+  title="Delete"
+  :visible.sync="deleteDialog"
+  width="30%"
+  >
+  <span>Are you sure to delete???</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="deleteDialog = false">Cancel</el-button>
+    <el-button type="primary" @click="deleteData">Confirm</el-button>
+  </span>
+</el-dialog>
 
 <el-table
     :data="filterCar"
@@ -74,21 +56,13 @@ title="Hello"
         <el-button
           size="mini"
           @click="handleEdit( scope.row)">Edit</el-button>
-       <el-popconfirm
-  confirm-button-text='OK' 
-  cancel-button-text='No, Thanks'
-  icon="el-icon-info"
-  icon-color="red"
-  title="Are you sure to delete this?"
-  @confirm="handleDelete(scope.row)"
->
+      
         <el-button
         slot="reference"
           size="mini"
           type="danger"
-          @click="trig=false"
+          @click="handleDelete(scope.row)"
           >Delete</el-button>
-          </el-popconfirm>
       </template>
     </el-table-column>
 </el-table>
@@ -96,26 +70,25 @@ title="Hello"
 </template>
 
 <script>
+import addDialogVue from '@/components/addDialog.vue';
 import dialogueFormVue from '../components/dialogueForm.vue';
 
 var carsObj =  require('../utils/cars.js');
 var cars = carsObj.cars;
-var valArr =[];
 var i=0;
-var id=5;
-var idxArr =[];
 var doList=[];
-var trig=false;
 export default{
   components:{
-    'dialogue-form':dialogueFormVue
+    'dialogue-form':dialogueFormVue,
+    'add-dialog':addDialogVue,
   },
     data(){
         return{
-            cars,newBrand:'',newModel:'',newIntroduction:'',newPrice:'',newSpeed:'',newWeight:'',newNumber:'',newImg:'',
-            dialogVisible:false,id,idxArr,displaySearch:false,searchModel:'',
-            i,valArr,addForm:false,doList,doForm:false,trig,showDialogueForm:false,
-            search:this.$route.params.id,dataa:'',
+            cars,
+            dialogVisible:false,displaySearch:false,searchModel:'',
+            i,addForm:false,doList,doForm:false,showDialogueForm:false,
+            search:this.$route.params.id,editData:'',AddshowDialogueForm:false,
+        deleteDialog:false,storeDelete:'',
         }
     },
     watch: {
@@ -125,26 +98,12 @@ export default{
   },
     computed: {
       filterCar(){
+        //not find all
         if(this.search!='allcar'){
-        var abc=cars.filter(car => car.brand.toLowerCase() == this.search.toLowerCase());
-          if(this.searchModel!=''){
-              var abd=cars.filter(car => car.model.toLowerCase() == this.searchModel.toLowerCase());
-          return abd;
-           }
-          if(this.trig==true){
-         return abc;
-          }
-          else{
-           return abc;}
-           
+        return this.cars.filter(car => car.brand.toLowerCase() == this.search.toLowerCase());
         }
         else{
-          if(this.searchModel!=''){
-              var abdf=cars.filter(car => car.model.toLowerCase() == this.searchModel.toLowerCase());
-          return abdf;
-           }
-          return cars;
-        }
+          return this.cars;}
       },
       formType(){
         if(this.addForm==true) 
@@ -155,74 +114,41 @@ export default{
       }
     },
     methods: {
+      deleteData(){
+this.deleteDialog=false;
+cars.splice(cars.findIndex(car => car== this.storeDelete),1);
+        doList.push('Delete '+ this.storeDelete.model)
+
+      },
+      addData(abc){
+        cars.push(abc)
+        
+      },
       updateData(abc){
-        console.log(cars, abc)
+        var found = cars.findIndex(car => car.id == abc.id)
+        cars[found].model= abc.model
+        cars[found].price= abc.price
+        cars[found].number= abc.number
       },
       searchInput(){
         this.displaySearch=!this.displaySearch;
       },
       handleEdit(row) {
-        this.dataa=row;
-        this.dataa=JSON.stringify(this.dataa)
+        this.editData=row;
+        this.editData=JSON.stringify(this.editData)
         this.dialogVisible=true;
         this.showDialogueForm=!this.showDialogueForm;
         this.i=cars.findIndex(car => car== row);
-        this.trig=true;
         doList.push('Edit '+ row.brand)
         console.log(carsObj.carList)
       },
       handleDelete(row) {
-        cars.splice(cars.findIndex(car => car== row),1);
-        this.trig=true;
-        doList.push('Delete '+ row.model)
-      },
-      Change(idx,val){
-        valArr[idx]=val;
-        idxArr[this.i]=idx;
-        console.log(valArr,idxArr);
-      },
-      cancel(){
-         this.dialogVisible=false;
-        valArr.splice(0,valArr.length);
-      },
-      confirm(){
-        this.dialogVisible=false;
-        for(let idx=0;idx<idxArr.length;idx++){
-          switch(idxArr[idx]){
-            case 0:
-              cars[this.i].model=valArr[0];
-              break;
-            case 1:
-              cars[this.i].price=valArr[1];
-              break;
-            case 2:
-              cars[this.i].number=valArr[2];
-              break;
-          }
-        }
-        valArr.splice(0,valArr.length);
-       idxArr.splice(0,idxArr.length);
-       this.trig=false;
+        this.deleteDialog=!this.deleteDialog;
+        this.storeDelete=row;
+        
       },
       add(){
-        this.addForm=!this.addForm;
-        if(this.newImg==''){
-this.newImg='https://www.lexus.com.vn/content/dam/lexus-v3-blueprint/price-list/my22/lexus-nx.jpg'
-        }
-        cars.push({
-        id:id++,
-        brand: this.newBrand,
-        type: 'Car',
-        model:this.newModel,
-        speed: this.newSpeed,
-        weight: this.newWeight,
-        introduction: this.newIntroduction,
-        number: this.newNumber,
-        price:this.newPrice,
-        src:this.newImg,
-          })
-this.newBrand='',this.newModel='',this.newPrice='',this.newSpeed='',this.newWeight=''
-this.newNumber='',this.newIntroduction='',this.newImg=''
+        this.AddshowDialogueForm=!this.AddshowDialogueForm
          doList.push('Add '+ this.newBrand)
       }
 

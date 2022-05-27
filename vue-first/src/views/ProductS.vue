@@ -8,9 +8,6 @@
   background-color="#545c64"
   text-color="#fff"
   active-text-color="#ffd04b">
-    <el-menu-item index="car">Car</el-menu-item>
-     <el-menu-item index="motor">Motor</el-menu-item>
-     <el-menu-item index="+">+</el-menu-item>
 
   
 </el-menu>
@@ -52,7 +49,6 @@
 <script>
     import {carList} from "@/utils/cars"
         import {motorList} from "@/utils/motors"
-
 
 
   export default {
