@@ -1,7 +1,8 @@
 <template>
 <div>
     
-    <el-menu
+<el-menu 
+
   class="el-menu-demo"
   mode="horizontal"
   @select="handleSelect"
@@ -9,8 +10,21 @@
   text-color="#fff"
   active-text-color="#ffd04b">
 
-  
+   <el-submenu index="car">
+      <template slot="title">Car</template>
+      <el-menu-item index="toyota">Toyota</el-menu-item>
+      <el-menu-item index="hyundai">item two</el-menu-item>
+      <el-menu-item index="vinfast">item three</el-menu-item>
+    </el-submenu>
+    <el-submenu index="motor">
+      <template slot="title">Motor</template>
+      <el-menu-item index="2-4-1">item one</el-menu-item>
+      <el-menu-item index="2-4-2">item two</el-menu-item>
+      <el-menu-item index="2-4-3">item three</el-menu-item>
+    </el-submenu>
 </el-menu>
+
+<button @click="abc">b</button>
 
 <el-table
     v-show="showTable"
@@ -48,9 +62,8 @@
 
 <script>
     import {carList} from "@/utils/cars"
-        import {motorList} from "@/utils/motors"
-
-
+    import {motorList} from "@/utils/motors"
+import AboutVue from "./About.vue";
   export default {
 
     data() {
@@ -63,13 +76,17 @@
         return this.carSelected ? carList  : motorList;
       }
     },
-
     methods: {
-     
-      handleSelect(key) {
+     abc(){
+       this.$router.addRoute({parentName: 'ProductS', path: '/about', name: 'about', component: AboutVue })
+       console.log(this.$router.options.routes)
+       this.$router.push(  {name:'about'} )
+     },
+      handleSelect(key,keyPath) {
       this.showTable=true;
-      this.$router.push({name:key ,params: { id: 'all'+key }});
-      (key == 'car') ? this.carSelected =true : this.carSelected =false;
+      console.log(key,keyPath)
+      this.$router.push({name:keyPath[0] ,params: { id: keyPath[1] }});
+      (keyPath[1] == 'car') ? this.carSelected =true : this.carSelected =false;
  },
       doubleClickEvent(event){
         this.$router.push({name:event.type ,params: { id: event.brand }})
