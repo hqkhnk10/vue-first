@@ -73,6 +73,8 @@ var d = new Date("2012-12-20");
 function format2(n, currency) {
     return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 }*/
+var x = 0;
+var whoAsk = 'TruongNgo';
 for (i = 0; i < cars.length; i++) {
     for (j = 0; j < carList.length; j++) {
         if (carList[j].brand == cars[i].brand) {
@@ -84,12 +86,12 @@ for (i = 0; i < cars.length; i++) {
         }
     }
     if (carBrand == true) {
-        carList.push({ brand: cars[i].brand, left: cars[i].number, type: 'car', date: d.toDateString() });
-
+        carList.push({
+            id: x, brand: cars[i].brand, left: cars[i].number, type: 'car', date: d, who: whoAsk
+        });
+        x++;
     }
 }
-
-
 
 export { cars, carList }
 

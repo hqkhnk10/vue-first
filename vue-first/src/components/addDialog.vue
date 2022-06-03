@@ -100,7 +100,7 @@
         rules: {
           brand: [
             { required: true, message: 'Please input brand name', trigger: 'blur' },
-            { min: 3, max: 25, message: 'Length should be 3 to 5', trigger: 'blur' }
+            { min: 3, max: 25, message: 'Length should be 3 to 25', trigger: 'blur' }
           ],
           model: [
             { required: true, message: 'Please input model name', trigger: 'blur' },
@@ -112,14 +112,6 @@
           introduction: [
             { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
           ],
-          speed: [
-      { required: true, message: 'speed is required'},
-      { type: 'number', message: 'speed must be a number'},
-    ],
-    weight: [
-      { required: true, message: 'weight is required'},
-      { type: 'number', message: 'weight must be a number'},
-    ],
           price: [
       { required: true, message: 'price is required'},
       { type: 'number', message: 'price must be a number'},

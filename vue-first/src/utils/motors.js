@@ -43,7 +43,8 @@ var motorList = [];
 var i, j;
 var motorBrand = true;
 var d = new Date("2015-03-25");
-
+var x = 0;
+var whoAsk = 'TruongNgo';
 for (i = 0; i < motors.length; i++) {
     motors[i].price = format2(motors[i].price, '$ ');
 }
@@ -59,15 +60,20 @@ for (i = 0; i < motors.length; i++) {
     }
     if (motorBrand == true) {
         motorList.push({
+            id: x,
             brand: motors[i].brand, left: motors[i].number,
-            type: 'motor', date: d.toDateString()
+            type: 'motor', date: d,
+            who: whoAsk,
         });
-
+        x++;
     }
 }
 
 function format2(n, currency) {
     return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 }
+
+var motormotor = JSON.stringify(motors);
+localStorage.setItem("motors", motormotor);
 
 export { motors, motorList }

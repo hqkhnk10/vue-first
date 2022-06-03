@@ -1,5 +1,6 @@
 <template>
     <div>
+      <el-button @click="storeData">store</el-button>
  <el-button type="primary" @click="searchInput">Search</el-button>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
  <el-button type="primary" @click="add">Add</el-button>
@@ -28,7 +29,7 @@
     <el-button type="primary" @click="deleteData">Confirm</el-button>
   </span>
 </el-dialog>
-
+ 
 <el-table
     :data="filterCar"
     style="width: 100%">
@@ -46,7 +47,7 @@
       <template slot-scope="scope">
         {{ scope.row.brand }} <br>
             {{ scope.row.model }}<br>
-      {{ scope.row.price }}<br>
+      ${{ scope.row.price }}<br>
       Car Left: {{scope.row.number}}
       </template>
     </el-table-column>
@@ -72,9 +73,9 @@
 <script>
 import addDialogVue from '@/components/addDialog.vue';
 import dialogueFormVue from '../components/dialogueForm.vue';
+import axios from "axios";
 
-var carsObj =  require('../utils/cars.js');
-var cars = carsObj.cars;
+
 var i=0;
 var doList=[];
 export default{
@@ -82,9 +83,17 @@ export default{
     'dialogue-form':dialogueFormVue,
     'add-dialog':addDialogVue,
   },
+  async created() {
+    try {
+      const res = await axios.get(`http://localhost:3000/cars`);
+      this.cars = res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
     data(){
         return{
-            cars,
+            cars:[],
             dialogVisible:false,displaySearch:false,searchModel:'',
             i,addForm:false,doList,doForm:false,showDialogueForm:false,
             search:this.$route.params.id,editData:'',AddshowDialogueForm:false,
@@ -114,21 +123,28 @@ export default{
       }
     },
     methods: {
+      storeData(){
+        console.log(this.cars.length)
+      },
       deleteData(){
 this.deleteDialog=false;
-cars.splice(cars.findIndex(car => car== this.storeDelete),1);
+this.cars.splice(this.cars.findIndex(car => car== this.storeDelete),1);
         doList.push('Delete '+ this.storeDelete.model)
 
       },
-      addData(abc){
-        cars.push(abc)
-        
+      async addData(abc){
+        console.log(abc)
+        const res = await axios.post(`http://localhost:3000/cars`, {
+        brand: abc.brand,
+        price:abc.price,
+      });
+        this.cars=[...this.cars, res.data]
       },
       updateData(abc){
-        var found = cars.findIndex(car => car.id == abc.id)
-        cars[found].model= abc.model
-        cars[found].price= abc.price
-        cars[found].number= abc.number
+        var found = this.cars.findIndex(car => car.id == abc.id)
+        this.cars[found].model= abc.model
+        this.cars[found].price= abc.price
+        this.cars[found].number= abc.number
       },
       searchInput(){
         this.displaySearch=!this.displaySearch;
@@ -136,11 +152,8 @@ cars.splice(cars.findIndex(car => car== this.storeDelete),1);
       handleEdit(row) {
         this.editData=row;
         this.editData=JSON.stringify(this.editData)
-        this.dialogVisible=true;
         this.showDialogueForm=!this.showDialogueForm;
-        this.i=cars.findIndex(car => car== row);
         doList.push('Edit '+ row.brand)
-        console.log(carsObj.carList)
       },
       handleDelete(row) {
         this.deleteDialog=!this.deleteDialog;

@@ -1,11 +1,10 @@
 <template>
 <div>
-    <router-link to="/homepage/products/car">Car</router-link>
-    <router-link to="/homepage/home/motor">Motor</router-link>
-    <router-view />
-    <router-view name="motor"/>
+    <h3>Sweet Home</h3>
 </div>
 </template>
 <script>
-
+export default{
+    
+}
 </script>

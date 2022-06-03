@@ -12,7 +12,7 @@
       @select="handleSelect"
          :router="true"
       >
-        <el-menu-item index="Home">
+        <el-menu-item index="Home" :route="{name:'Home'}">
         <i class="fa fa-home" style="padding-right:10px"></i>
         <span>Home</span>
       </el-menu-item>

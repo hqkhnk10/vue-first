@@ -1,30 +1,73 @@
 <template>
 <div>
-    
-<el-menu 
-
-  class="el-menu-demo"
+<el-menu
+class="el-menu-demo"
   mode="horizontal"
-  @select="handleSelect"
+    @select="handleSelect"
   background-color="#545c64"
   text-color="#fff"
   active-text-color="#ffd04b">
+<template v-for="(rule, index) in treeData">
+            
+             <el-menu-item 
+                           :key="index"
+                           :index="rule.name"
+             >{{ rule.name }}
+             </el-menu-item>
 
-   <el-submenu index="car">
-      <template slot="title">Car</template>
-      <el-menu-item index="toyota">Toyota</el-menu-item>
-      <el-menu-item index="hyundai">item two</el-menu-item>
-      <el-menu-item index="vinfast">item three</el-menu-item>
-    </el-submenu>
-    <el-submenu index="motor">
-      <template slot="title">Motor</template>
-      <el-menu-item index="2-4-1">item one</el-menu-item>
-      <el-menu-item index="2-4-2">item two</el-menu-item>
-      <el-menu-item index="2-4-3">item three</el-menu-item>
-    </el-submenu>
+           
+        </template>
+<el-button style="height:50px" @click="wantaddParent = true">Add Parent</el-button>
 </el-menu>
 
-<button @click="abc">b</button>
+<el-dialog
+  title="Add"
+  :visible.sync="addDialogVisible"
+  width="30%">
+  <el-input v-model="data"></el-input>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="addDialogVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="addDialogVisible = false,addData(data)">Confirm</el-button>
+  </span>
+</el-dialog>
+
+<el-dialog
+  title="Add Parent"
+  :visible.sync="wantaddParent"
+  width="30%">
+  <el-input v-model="data"></el-input>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="wantaddParent = false">Cancel</el-button>
+    <el-button type="primary" @click="wantaddParent = false,addParent(data)">Confirm</el-button>
+  </span>
+</el-dialog>
+
+<el-dialog
+  title="Delete"
+  :visible.sync="deleteDialog"
+  width="30%"
+  >
+  <span>Are you sure to delete???</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="deleteDialog = false">Cancel</el-button>
+    <el-button type="primary" @click="deleteData">Confirm</el-button>
+  </span>
+</el-dialog>
+  <el-button v-show="showTable" @click="addChild">Add Child</el-button>
+
+<edit-child
+:dialogVisible="editDialogueForm"
+:editData="editData"
+@toggleDialogueForm="editDialogueForm=!editDialogueForm"
+@edit="updateData"
+/>
+
+<add-child
+:dialogVisible="AddshowDialogueForm"
+:editData="addData"
+@toggleDialogueForm="AddshowDialogueForm=!AddshowDialogueForm"
+@add="addData"
+/>
 
 <el-table
     v-show="showTable"
@@ -54,39 +97,130 @@
         </span>
       </template>
     </el-table-column>
+   
+ <el-table-column label="Nguoi nhap" width="180">
+      <template slot-scope="scope">
+        <span style="margin-left: 10px">
+          {{ scope.row.who }}
+        </span>
+      </template>
+    </el-table-column>
+
+     <el-table-column
+      label="Operations">
+      <template slot-scope="scope">
+        
+        <el-button
+          size="mini"
+          @click="handleEdit( scope.row)">Edit</el-button>
+      
+        <el-button
+        slot="reference"
+          size="mini"
+          type="danger"
+          @click="handleDelete(scope.row)"
+          >Delete</el-button>
+      </template>
+    </el-table-column>
   </el-table>
 
-    <router-view />
+    <router-view :key="$route.fullPath"/>
 </div>
 </template>
 
 <script>
-    import {carList} from "@/utils/cars"
+    import editChildVue from "@/components/editChild.vue";
+import {carList} from "@/utils/cars"
     import {motorList} from "@/utils/motors"
 import AboutVue from "./About.vue";
+import addChildVue from '@/components/addChild.vue';
   export default {
-
+components:{
+    'edit-child':editChildVue,
+    'add-child':addChildVue,
+  },
     data() {
       return {
-        motorList,carList,carSelected:false,showTable:false,
+        motorList,carList,carSelected:false,showTable:false,data:'',
+        wantaddParent:false,wantaddChildren:false,addDialogVisible:false,
+         storeDelete:'',deleteDialog:false,editData:'',editDialogueForm:false,
+        AddshowDialogueForm:false,
+        treeData:[
+           {
+        name: "car",
+        children: [
+          { name: "toyota" },
+          { name: "hyundai" },
+          {
+            name: "vinfast",
+          }
+        ]
+      },
+       {name: "motor",
+        children: [
+          { name: "yamaha" },
+          { name: "honda" },
+          {
+            name: "suzuki",
+          
+          }
+        ]
+      },
+      ]
       };
     },
+   
     computed:{
       dataList: function(){
         return this.carSelected ? carList  : motorList;
       }
     },
     methods: {
+      addData(abc){
+         this.dataList.push(abc)
+      },
+      addChild(){
+        this.AddshowDialogueForm=!this.AddshowDialogueForm
+      },
+      updateData(abc){
+        var found = this.dataList.findIndex(car => car.id == abc.id)
+        this.dataList[found].brand= abc.brand
+        this.dataList[found].date= abc.date
+        this.dataList[found].left= abc.left
+        this.dataList[found].who= abc.who
+      },
+      handleEdit(row) {
+        this.editData=JSON.stringify(row)
+        this.dialogVisible=true;
+        this.editDialogueForm=!this.editDialogueForm;
+        console.log( this.editData)
+      },
+       deleteData(){
+this.deleteDialog=false;
+console.log(this.dataList.findIndex(car => car== this.storeDelete))
+this.dataList.splice(this.dataList.findIndex(car => car== this.storeDelete),1);
+console.log(this.dataList)
+      },
+      handleDelete(row) {
+        this.deleteDialog=!this.deleteDialog;
+        this.storeDelete=row;
+      },
+      addChildren(child){ 
+        child.children.push({name:'Child'})
+        console.log(child)},
+      addParent(){
+        if(this.data!=''){
+        this.treeData.push({name:this.data})}
+        this.data='';
+      },
      abc(){
        this.$router.addRoute({parentName: 'ProductS', path: '/about', name: 'about', component: AboutVue })
-       console.log(this.$router.options.routes)
-       this.$router.push(  {name:'about'} )
+       console.log(this.treeData)
      },
-      handleSelect(key,keyPath) {
+      handleSelect(key) {
       this.showTable=true;
-      console.log(key,keyPath)
-      this.$router.push({name:keyPath[0] ,params: { id: keyPath[1] }});
-      (keyPath[1] == 'car') ? this.carSelected =true : this.carSelected =false;
+      console.log(key);
+      (key == 'car') ? this.carSelected =true : this.carSelected =false;
  },
       doubleClickEvent(event){
         this.$router.push({name:event.type ,params: { id: event.brand }})

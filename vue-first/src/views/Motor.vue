@@ -21,7 +21,7 @@
   title="Delete"
   :visible.sync="deleteDialog"
   width="30%"
-  :before-close="handleClose">
+  >
   <span>Are you sure to delete???</span>
   <span slot="footer" class="dialog-footer">
     <el-button @click="deleteDialog = false">Cancel</el-button>

@@ -6,6 +6,7 @@
 <img :src="vehicle.src" width="600" height="400">
     <br>
      <el-button type="primary" @click="edit">Edit</el-button>
+     
 
 <el-dialog
   title="Edit"
@@ -25,6 +26,14 @@ Car Price <br><input  :value="vehicle.price" @change="Change(6,$event.target.val
     <el-button type="primary" @click="confirm">Confirm</el-button>
   </span>
 </el-dialog>
+
+<add-dialog
+:dialogVisible="showDialogueForm"
+:editData="editData"
+@toggleDialogueForm="showDialogueForm=!showDialogueForm"
+@edit="updateData"
+/>
+
     <table>
   <tr>
   <td>{{vehicle.type}} Brand</td>
@@ -77,6 +86,7 @@ var idxArr =[];
               vehicleId:this.$route.params.id,
               vehicleType:this.$route.params.type,
               dialogVisible,valArr,idxArr,
+              showDialogueForm:false,
             }
         },
           computed:{
@@ -93,6 +103,11 @@ var idxArr =[];
             }
           },
           methods: {
+            handleEdit() {
+      
+        this.editData=JSON.stringify(this.vehicle)
+        this.showDialogueForm=!this.showDialogueForm;
+      },
         navigate() {
                 router.go(-1);
         },

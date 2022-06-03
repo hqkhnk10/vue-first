@@ -32,7 +32,7 @@ const routes = [
 
             {
                 path: routerS.views[2].path,
-                name: routerS.views[2].name,
+                name: 'Home',
                 component: () => import('./views/HomeS'),
 
             },
