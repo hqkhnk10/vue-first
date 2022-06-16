@@ -10,7 +10,7 @@ let motors = [
         introduction: 'June 2021',
         number: 14,
         price: 4000,
-        src: 'https://daotaolaixe.com.vn/wp-content/uploads/2021/06/Xe-PKL-Yamaha-R15-V3.jpg',
+        src: require('../assets/toyota.jpg')
     },
     {
         id: idMotor++,

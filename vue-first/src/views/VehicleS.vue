@@ -27,12 +27,6 @@ Car Price <br><input  :value="vehicle.price" @change="Change(6,$event.target.val
   </span>
 </el-dialog>
 
-<add-dialog
-:dialogVisible="showDialogueForm"
-:editData="editData"
-@toggleDialogueForm="showDialogueForm=!showDialogueForm"
-@edit="updateData"
-/>
 
     <table>
   <tr>

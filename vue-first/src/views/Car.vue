@@ -1,6 +1,5 @@
 <template>
     <div>
-      <el-button @click="storeData">store</el-button>
  <el-button type="primary" @click="searchInput">Search</el-button>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
  <el-button type="primary" @click="add">Add</el-button>
@@ -38,17 +37,17 @@
       width="420">
       <template slot-scope="scope">
        <router-link :to="{ name: 'vehicle', params: { id: scope.row.id , type:'car' }}">
-       <img :src="scope.row.src"></router-link>
+       <img :src="PhotoPath+scope.row.car_photo" :alt="scope.row.car_photo"></router-link>
       </template>
     </el-table-column>
     <el-table-column
       label="Description"
       width="180">
       <template slot-scope="scope">
-        {{ scope.row.brand }} <br>
-            {{ scope.row.model }}<br>
-      ${{ scope.row.price }}<br>
-      Car Left: {{scope.row.number}}
+        {{ scope.row.car_brand }} <br>
+            {{ scope.row.car_model }}<br>
+      ${{ scope.row.car_price }}<br>
+      Date: {{scope.row.car_date}}
       </template>
     </el-table-column>
     <el-table-column
@@ -79,21 +78,16 @@ import axios from "axios";
 var i=0;
 var doList=[];
 export default{
+  mounted:function(){
+    this.refreshData();
+},
   components:{
     'dialogue-form':dialogueFormVue,
     'add-dialog':addDialogVue,
   },
-  async created() {
-    try {
-      const res = await axios.get(`http://localhost:3000/cars`);
-      this.cars = res.data;
-    } catch (error) {
-      console.log(error);
-    }
-  },
     data(){
         return{
-            cars:[],
+            cars:[],PhotoPath:"https://localhost:44307/photos/",
             dialogVisible:false,displaySearch:false,searchModel:'',
             i,addForm:false,doList,doForm:false,showDialogueForm:false,
             search:this.$route.params.id,editData:'',AddshowDialogueForm:false,
@@ -108,43 +102,56 @@ export default{
     computed: {
       filterCar(){
         //not find all
-        if(this.search!='allcar'){
-        return this.cars.filter(car => car.brand.toLowerCase() == this.search.toLowerCase());
-        }
-        else{
+        //if(this.search!='allcar'){
+        //return this.cars.filter(car => car.car_brand.toLowerCase() == this.search.toLowerCase());
+       // }
+        //else{
           return this.cars;}
-      },
-      formType(){
-        if(this.addForm==true) 
-        {return 1;}
-        if(this.dialogVisible==true) 
-        {return 2;}
-        return 0;
-      }
+     // },
+     
     },
     methods: {
-      storeData(){
-        console.log(this.cars.length)
-      },
+ refreshData(){
+        axios.get("https://localhost:44307/cars")
+        .then((response)=>{
+            this.cars=response.data;
+        });
+    },
       deleteData(){
 this.deleteDialog=false;
-this.cars.splice(this.cars.findIndex(car => car== this.storeDelete),1);
-        doList.push('Delete '+ this.storeDelete.model)
-
+console.log(this.storeDelete.car_id);
+axios.delete("https://localhost:44307/cars/"+this.storeDelete.car_id)
+        .then(()=>{
+            this.refreshData();
+        });
       },
-      async addData(abc){
+       addData(abc){
         console.log(abc)
-        const res = await axios.post(`http://localhost:3000/cars`, {
-        brand: abc.brand,
-        price:abc.price,
-      });
-        this.cars=[...this.cars, res.data]
+        axios.post("https://localhost:44307/cars",{
+            car_brand:abc.brand,
+            car_model:abc.model,
+            car_price:abc.price,
+            car_photo:abc.photo,
+            car_date:abc.date,
+        })
+        .then(()=>{
+            this.refreshData();
+        });
       },
-      updateData(abc){
-        var found = this.cars.findIndex(car => car.id == abc.id)
-        this.cars[found].model= abc.model
-        this.cars[found].price= abc.price
-        this.cars[found].number= abc.number
+       updateData(abc){
+       console.log(abc)
+        axios.put("https://localhost:44307/cars",{
+            car_id : abc.id,
+            car_brand:abc.brand,
+            car_model:abc.model,
+            car_price:abc.price,
+            car_photo:abc.photo,
+            car_date:abc.date,
+        })
+        .then(()=>{
+            this.refreshData();
+        });
+
       },
       searchInput(){
         this.displaySearch=!this.displaySearch;
