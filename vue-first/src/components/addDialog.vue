@@ -77,7 +77,7 @@ import axios from "axios";
             { min: 3, max: 25, message: 'Length should be 3 to 5', trigger: 'blur' }
           ],
           type: [
-            { required: true, message: 'Please select Activity zone', trigger: 'change' }
+            { required: true, message: 'Please select ', trigger: 'change' }
           ],
           date: [
             {  required: true, message: 'Please pick a date', trigger: 'change' }
@@ -109,6 +109,9 @@ import axios from "axios";
           if (valid) {
           
             this.$emit('add',this.ruleForm)
+ this.ruleForm.brand='',this.ruleForm.model='',
+ this.ruleForm.type='',this.ruleForm.date='',
+ this.ruleForm.price='', this.ruleForm.photo='',
         this.$emit('toggleDialogueForm')
              this.$notify.success({
               title: "Success",

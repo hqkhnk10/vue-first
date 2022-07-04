@@ -8,18 +8,10 @@
   width="30%">
 
 <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" >
-  <el-form-item label="Brand" prop="brand">
+  <el-form-item label="Name" prop="brand">
     <el-input v-model="ruleForm.brand"></el-input>
   </el-form-item>
-  <el-form-item label="Date" required>
-      <el-form-item prop="date">
-        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date" style="width: 100%;"></el-date-picker>
-      </el-form-item>
-  </el-form-item>
-  <el-form-item label="Left" prop="left">
-    <el-input v-model.number="ruleForm.left"></el-input>
-  </el-form-item>
-  <el-form-item label="Who" prop="who">
+  <el-form-item label="Address" prop="who">
     <el-input v-model="ruleForm.who"></el-input>
   </el-form-item>
   <el-form-item>
@@ -48,9 +40,7 @@ props: {
         ruleForm:{
           id:'',
           brand:'',
-          date:'',
           who:'',
-          left:'',
         },
         rules: {
         brand: [
@@ -70,14 +60,6 @@ props: {
             { required: true, message: 'Please input model name', trigger: 'blur' },
             { min: 3, max: 25, message: 'Length should be 3 to 5', trigger: 'blur' }
           ],
-          date: [
-            { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
-          ],
-    left: [
-      { required: true, message: 'Left is required'},
-      { type: 'number', message: 'Left must be a number'},
-    ],
-   
       },
     };
     },
@@ -111,11 +93,9 @@ this.$emit('toggleDialogueForm')    },
     watch: {
       editData: function(){
         var obj = JSON.parse(this.editData)
-        this.ruleForm.id=obj.id
-        this.ruleForm.brand=obj.brand
-        this.ruleForm.date=obj.date
-        this.ruleForm.who=obj.who
-        this.ruleForm.left=obj.left
+        this.ruleForm.id=obj.company_id
+        this.ruleForm.brand=obj.company_name
+        this.ruleForm.who=obj.company_address
 
       },
       dialogVisible: function(){

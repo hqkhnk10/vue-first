@@ -1,6 +1,5 @@
 <template>
     <div>
- <el-button type="primary" @click="searchInput">Search</el-button>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
  <el-button type="primary" @click="add">Add</el-button>
  <el-button type="primary" @click="doForm=!doForm">Do List</el-button>
@@ -112,7 +111,7 @@ export default{
     },
     methods: {
  refreshData(){
-        axios.get("https://localhost:44307/cars")
+        axios.get("https://localhost:44307/api/cars/"+this.search)
         .then((response)=>{
             this.cars=response.data;
         });
@@ -120,19 +119,20 @@ export default{
       deleteData(){
 this.deleteDialog=false;
 console.log(this.storeDelete.car_id);
-axios.delete("https://localhost:44307/cars/"+this.storeDelete.car_id)
+axios.delete("https://localhost:44307/api/cars/"+this.storeDelete.car_id)
         .then(()=>{
             this.refreshData();
         });
       },
        addData(abc){
         console.log(abc)
-        axios.post("https://localhost:44307/cars",{
+        axios.post("https://localhost:44307/api/cars",{
             car_brand:abc.brand,
             car_model:abc.model,
             car_price:abc.price,
             car_photo:abc.photo,
             car_date:abc.date,
+            company_id:this.search,
         })
         .then(()=>{
             this.refreshData();
@@ -140,7 +140,7 @@ axios.delete("https://localhost:44307/cars/"+this.storeDelete.car_id)
       },
        updateData(abc){
        console.log(abc)
-        axios.put("https://localhost:44307/cars",{
+        axios.put("https://localhost:44307/api/cars",{
             car_id : abc.id,
             car_brand:abc.brand,
             car_model:abc.model,

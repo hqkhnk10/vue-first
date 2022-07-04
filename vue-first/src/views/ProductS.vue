@@ -71,40 +71,32 @@ class="el-menu-demo"
 
 <el-table
     v-show="showTable"
-    :data="dataList"
+    :data="company"
     @row-dblclick="doubleClickEvent($event)"
     ref="productList"
     style="width: 100%"
   >
-    <el-table-column label="Ngày nhập" width="180">
+    <el-table-column label="ID" width="180">
       <template slot-scope="scope">
-        <i class="el-icon-time"></i>
         <span style="margin-left: 10px">
-          {{ scope.row.date }}
+          {{ scope.row.company_id }}
         </span>
       </template>
     </el-table-column>
-    <el-table-column label="Loại sản phẩm" width="180">
+    <el-table-column label="Name" width="180">
       <template slot-scope="scope">
-        {{ scope.row.brand }}
+        {{ scope.row.company_name }}
       </template>
     </el-table-column>
     
-    <el-table-column label="Số lượng" width="180">
+    <el-table-column label="Address" width="180">
       <template slot-scope="scope">
         <span style="margin-left: 10px">
-          {{ scope.row.left }}
+          {{ scope.row.company_address }}
         </span>
       </template>
     </el-table-column>
    
- <el-table-column label="Nguoi nhap" width="180">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">
-          {{ scope.row.who }}
-        </span>
-      </template>
-    </el-table-column>
 
      <el-table-column
       label="Operations">
@@ -134,13 +126,19 @@ import {carList} from "@/utils/cars"
     import {motorList} from "@/utils/motors"
 import AboutVue from "./About.vue";
 import addChildVue from '@/components/addChild.vue';
+
+import axios from "axios";
   export default {
+     mounted:function(){
+    this.refreshData();
+},
 components:{
     'edit-child':editChildVue,
     'add-child':addChildVue,
   },
     data() {
       return {
+        company:[],
         motorList,carList,carSelected:false,showTable:false,data:'',
         wantaddParent:false,wantaddChildren:false,addDialogVisible:false,
          storeDelete:'',deleteDialog:false,editData:'',editDialogueForm:false,
@@ -176,31 +174,58 @@ components:{
       }
     },
     methods: {
-      addData(abc){
-         this.dataList.push(abc)
+       refreshData(){
+        axios.get("https://localhost:44307/api/company")
+        .then((response)=>{
+            this.company=response.data;
+        });
+    },
+
+deleteData(){
+this.deleteDialog=false;
+console.log(this.storeDelete.car_id);
+axios.delete("https://localhost:44307/api/company/"+this.storeDelete.company_id)
+        .then(()=>{
+            this.refreshData();
+        });
+        this.$router.go(-1)
       },
+       addData(abc){
+        console.log(abc)
+        axios.post("https://localhost:44307/api/company",{
+            company_name:abc.brand,
+            company_address:abc.who,
+        })
+        .then(()=>{
+            this.refreshData();
+        });
+      },
+       updateData(abc){
+       console.log(abc)
+        axios.put("https://localhost:44307/api/company",{
+            company_id : abc.id,
+            company_name:abc.brand,
+            company_address:abc.who,
+        })
+        .then(()=>{
+            this.refreshData();
+        });
+
+      },
+
+
+      
       addChild(){
         this.AddshowDialogueForm=!this.AddshowDialogueForm
       },
-      updateData(abc){
-        var found = this.dataList.findIndex(car => car.id == abc.id)
-        this.dataList[found].brand= abc.brand
-        this.dataList[found].date= abc.date
-        this.dataList[found].left= abc.left
-        this.dataList[found].who= abc.who
-      },
+     
       handleEdit(row) {
         this.editData=JSON.stringify(row)
         this.dialogVisible=true;
         this.editDialogueForm=!this.editDialogueForm;
         console.log( this.editData)
       },
-       deleteData(){
-this.deleteDialog=false;
-console.log(this.dataList.findIndex(car => car== this.storeDelete))
-this.dataList.splice(this.dataList.findIndex(car => car== this.storeDelete),1);
-console.log(this.dataList)
-      },
+      
       handleDelete(row) {
         this.deleteDialog=!this.deleteDialog;
         this.storeDelete=row;
@@ -223,7 +248,7 @@ console.log(this.dataList)
       (key == 'car') ? this.carSelected =true : this.carSelected =false;
  },
       doubleClickEvent(event){
-        this.$router.push({name:event.type ,params: { id: event.brand }})
+        this.$router.push({name:'car' ,params: { id: event.company_id }})
       }
     }
   }
