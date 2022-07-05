@@ -29,7 +29,7 @@
 
         <br><br><br>
         <span class="or">Or sign up using</span><br><br>
-        <a href="http://localhost:8080/homepage" id="s1">SIGN UP</a>
+        <a @click="register" id="s1">SIGN UP</a>
       </div>
     </div>
   </div>
@@ -52,9 +52,9 @@ data() {
   methods: {
     ...mapActions(["LogIn"]),
     async submit() {
-      const User = new FormData();
-      User.append("username", this.form.username);
-      User.append("password", this.form.password);
+      var User =[];
+      User.username=this.form.username;
+      User.password=this.form.password;
       console.log(User);
 
       try {
@@ -64,6 +64,9 @@ data() {
         this.showError = true
       }
     },
+    register(){
+            this.$router.push("/register");
+    }
   },
 }
 

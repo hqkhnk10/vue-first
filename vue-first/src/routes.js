@@ -21,6 +21,11 @@ const routes = [
         redirect: '/login'
     },
     {
+        path: '/register',
+        name: 'Register',
+        component: () => import('./components/register'),
+    },
+    {
         path: '/login',
         name: 'Login',
         component: Login

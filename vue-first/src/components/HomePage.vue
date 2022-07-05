@@ -63,6 +63,7 @@
          <div><button v-on:click="getUser()"><i class="fa fa-random"></i></button></div>
 
         <div style="flex-basis: 80%;word-break: break-all;">{{email}}</div>
+        <button @click="test">Test</button>
         </div>
         </div>
     
@@ -83,28 +84,28 @@
 </style>
 
 <script>
- const item = {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      };
+import { mapGetters } from 'vuex'
+
   export default {
     data(){
       return{
-      name:'Truong Ngo Truong Ngo',
-      email: 'truongngongongongo@gmail.com',
+      name:'a',
+      email:'b',
       picture:'https://i.pinimg.com/originals/2c/0a/08/2c0a08b3751b4401ffa8f1719a642b9d.png',
-      search:'',
-        tableData: Array(20).fill(item)
+     
       }
     },
+    computed: {
+    // mix the getters into computed with object spread operator
+    ...mapGetters([
+      'isAuthenticated',
+      'StateRole',
+      'StateUser'
+    ])
+  },
   methods: {
-    async getUser(){
-      const res = await fetch('https://randomuser.me/api')
-      const {results} = await res.json()
-      this.name= results[0].name.first +" "+ results[0].name.last
-      this.email=results[0].email
-      this.picture=results[0].picture.thumbnail
+    test(){
+      console.log(this.StateUser,this.StateRole)
     },
     handleSelect(key, keyPath) {
           this.$router.push({name: key});

@@ -12,27 +12,26 @@ const getters = {
 };
 
 const actions = {
-    async Register({ dispatch }, form) {
-        await axios.post('register', form)
-        let UserForm = new FormData()
-        UserForm.append('username', form.username)
-        UserForm.append('password', form.password)
-        await dispatch('LogIn', UserForm)
+    async Register({ dispatch }, User) {
+        console.log('register', User)
+        await axios.post('http://localhost:3000/accounts',
+            { username: User.username, password: User.password, role: 'member' })
+        await dispatch('LogIn', User)
     },
 
-    async LogIn(user) {
-        console.log(user)
-        await axios.post("http://localhost:3000/auth", user);
+    async LogIn({ commit }, User) {
+        console.log(User)
+        await axios.post('http://localhost:3000/auth',
+            { username: User.username, password: User.password })
+            .then(function (response) {
+                commit('setUser', response.data.username)
+                commit('setRole', response.data.role)
+            })
     },
 
     async CreateRole({ dispatch }, role) {
         await axios.post("post", role);
         return await dispatch("GetRole");
-    },
-
-    async GetRole({ commit }) {
-        let response = await axios.get("posts");
-        commit("setRole", response.data);
     },
 
     async LogOut({ commit }) {
@@ -43,10 +42,12 @@ const actions = {
 
 const mutations = {
     setUser(state, username) {
+        console.log('set user', username)
         state.user = username;
     },
 
     setRole(state, role) {
+        console.log('set role', role)
         state.role = role;
     },
     logout(state, user) {
