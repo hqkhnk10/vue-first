@@ -7,14 +7,14 @@
         
       </div>
       <div>
-        <form action="http://localhost:8080/homepage" target="_blank">
+        <form @submit.prevent="submit">
           Username <br>
           <a class="fa fa-user " style="font-size:15px;padding:0px;"></a>
-          <input type="text" placeholder="Type your user name" />
+          <input type="text" v-model="form.username" placeholder="Type your user name" />
           <hr>
           Password <br>
           <a class="fa fa-lock" style="font-size:15px;padding:0px;"></a>
-          <input type="password" placeholder="Type your password" />
+          <input type="password" v-model="form.password" placeholder="Type your password" />
           <hr>
           <a href="" id="r1">Forget password?</a><br>
           <br>
@@ -36,10 +36,35 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 
 export default {
   name: 'LoginForm',
+data() {
+    return {
+      form: {
+        username: "",
+        password: "",
+      },
+      showError: false
+    };
+  },
+  methods: {
+    ...mapActions(["LogIn"]),
+    async submit() {
+      const User = new FormData();
+      User.append("username", this.form.username);
+      User.append("password", this.form.password);
+      console.log(User);
 
+      try {
+          await this.LogIn(User);
+          this.showError = false
+      } catch (error) {
+        this.showError = true
+      }
+    },
+  },
 }
 
 </script>

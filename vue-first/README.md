@@ -8,6 +8,7 @@ npm install
 ```
 npm run serve
 json-server carJSON.json
+json-server accountJSON.json
 ```
 
 ### Compiles and minifies for production
