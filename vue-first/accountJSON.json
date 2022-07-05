@@ -1,0 +1,123 @@
+{
+  "accounts": [
+    {
+      "id": 1,
+      "username": "123",
+      "password": "123",
+      "role": "member"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "password": "admin",
+      "role": "admin"
+    }
+  ],
+  "auth": [
+    {
+      "id": 1,
+      "username": "123",
+      "password": "123"
+    },
+    {
+      "username": {
+        "getters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "state": {
+          "user": null,
+          "role": null
+        },
+        "rootGetters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "rootState": {
+          "auth": {
+            "user": null,
+            "role": null
+          }
+        }
+      },
+      "password": "User",
+      "id": 2
+    },
+    {
+      "username": {
+        "getters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "state": {
+          "user": null,
+          "role": null
+        },
+        "rootGetters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "rootState": {
+          "auth": {
+            "user": null,
+            "role": null
+          }
+        }
+      },
+      "password": "User",
+      "id": 3
+    },
+    {
+      "username": {
+        "getters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "state": {
+          "user": null,
+          "role": null
+        },
+        "rootGetters": {
+          "isAuthenticated": false,
+          "StateRole": null,
+          "StateUser": null
+        },
+        "rootState": {
+          "auth": {
+            "user": null,
+            "role": null
+          }
+        }
+      },
+      "id": 4
+    },
+    {
+      "getters": {
+        "isAuthenticated": false,
+        "StateRole": null,
+        "StateUser": null
+      },
+      "state": {
+        "user": null,
+        "role": null
+      },
+      "rootGetters": {
+        "isAuthenticated": false,
+        "StateRole": null,
+        "StateUser": null
+      },
+      "rootState": {
+        "auth": {
+          "user": null,
+          "role": null
+        }
+      },
+      "id": 5
+    }
+  ]
+}
