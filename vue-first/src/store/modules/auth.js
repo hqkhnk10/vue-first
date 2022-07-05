@@ -14,18 +14,19 @@ const getters = {
 const actions = {
     async Register({ dispatch }, User) {
         console.log('register', User)
-        await axios.post('http://localhost:3000/accounts',
+        await axios.post('https://localhost:44307/api/account',
             { username: User.username, password: User.password, role: 'member' })
         await dispatch('LogIn', User)
     },
 
     async LogIn({ commit }, User) {
         console.log(User)
-        await axios.post('http://localhost:3000/auth',
+        await axios.post('https://localhost:44307/api/authentication',
             { username: User.username, password: User.password })
             .then(function (response) {
-                commit('setUser', response.data.username)
-                commit('setRole', response.data.role)
+                console.log(response.data)
+                commit('setUser', response.data[0].username)
+                commit('setRole', response.data[0].role)
             })
     },
 

@@ -6,7 +6,7 @@
         <i class="fa fa-camera" style="padding-right:10px"></i>
 
         Untitled UI</p>
-<el-input size="small" placeholder="Search" v-model="search" style="width:80%;padding-left: 30px;margin-bottom: 10px;">
+<el-input size="small" placeholder="Search" style="width:80%;padding-left: 30px;margin-bottom: 10px;">
 </el-input>
       <el-menu 
       @select="handleSelect"
@@ -60,7 +60,7 @@
          <img v-bind:src="picture" style="width:20%;border-radius: 50%;float:left;padding-right: 10px;">
          <div style="display:flex;flex-wrap: wrap;width: 70%;">
          <div style="flex-basis: 80%;">{{name}}</div>
-         <div><button v-on:click="getUser()"><i class="fa fa-random"></i></button></div>
+         <div><button v-on:click="logout()"><i class="fa fa-sign-out"></i></button></div>
 
         <div style="flex-basis: 80%;word-break: break-all;">{{email}}</div>
         <button @click="test">Test</button>
@@ -89,23 +89,27 @@ import { mapGetters } from 'vuex'
   export default {
     data(){
       return{
-      name:'a',
-      email:'b',
+      email:this.$store.getters.StateRole,
       picture:'https://i.pinimg.com/originals/2c/0a/08/2c0a08b3751b4401ffa8f1719a642b9d.png',
      
       }
     },
     computed: {
     // mix the getters into computed with object spread operator
-    ...mapGetters([
-      'isAuthenticated',
-      'StateRole',
-      'StateUser'
-    ])
+    ...mapGetters(
+      {
+      name:'StateUser',
+      role:'StateRole',
+      }
+    )
   },
   methods: {
+    async logout (){
+        await this.$store.dispatch('LogOut')
+        console.log(this.$store.getters.StateUser)
+      },
     test(){
-      console.log(this.StateUser,this.StateRole)
+      console.log(this.name)
     },
     handleSelect(key, keyPath) {
           this.$router.push({name: key});

@@ -10,7 +10,7 @@ import Login from './components/Login'
 import VueRouter from 'vue-router'
 import Vue from 'vue'
 import { routerS } from './utils/constants'
-
+import store from './store';
 
 Vue.use(VueRouter)
 
@@ -33,6 +33,7 @@ const routes = [
     {
         path: '/homepage',
         component: HomePage,
+        meta: { requiresAuth: true },
         children: [// start nesting routes. All the routes below are sub routes of the main route
 
             {
@@ -103,6 +104,18 @@ const routes = [
 const router = new VueRouter({
     mode: 'history',
     routes,
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (store.getters.isAuthenticated) {
+            next()
+            return
+        }
+        next('/login')
+    } else {
+        next()
+    }
 })
 
 export default router

@@ -59,6 +59,7 @@ data() {
 
       try {
           await this.LogIn(User);
+          this.$router.push("/homepage");
           this.showError = false
       } catch (error) {
         this.showError = true
