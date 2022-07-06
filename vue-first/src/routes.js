@@ -31,26 +31,34 @@ const routes = [
         component: Login
     },
     {
+        path: '/unauthorize',
+        name: 'Unauthorize',
+        component: () => import('./views/UnAuthorize'),
+    },
+    {
         path: '/homepage',
         component: HomePage,
-        meta: { requiresAuth: true },
+        meta: { authorize: 'member' },
         children: [// start nesting routes. All the routes below are sub routes of the main route
 
             {
                 path: routerS.views[2].path,
                 name: 'Home',
                 component: () => import('./views/HomeS'),
+                meta: { authorize: 'member' },
 
             },
             {
                 path: 'dashboard',
                 name: 'Dashboard',
                 component: Dashboard,
+                meta: { authorize: 'member' },
             },
             {
                 path: 'products',
                 name: 'ProductS',
                 component: ProductS,
+                meta: { authorize: 'admin' },
                 children: [{
                     path: 'car/:id',
                     name: 'car',
@@ -104,16 +112,31 @@ const routes = [
 const router = new VueRouter({
     mode: 'history',
     routes,
+
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.getters.isAuthenticated) {
-            next()
+    const { authorize } = to.meta;
+    if (authorize) {
+        if (!store.getters.isAuthenticated) {
+            next('/login')
             return
         }
-        next('/login')
-    } else {
+        else {
+            if (store.getters.StateRole == 'admin') {
+                return next();
+            }
+            if (store.getters.StateRole == authorize) {
+                return next();
+            }
+            if (store.getters.StateRole != authorize) {
+                console.log(authorize)
+                next('/unauthorize')
+                return
+            }
+        }
+    }
+    else {
         next()
     }
 })

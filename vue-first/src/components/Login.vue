@@ -6,6 +6,7 @@
         <h1 style="color:black;padding-top:10px">Login</h1>
         
       </div>
+      <div v-if="showError">Login failed</div>
       <div>
         <form @submit.prevent="submit">
           Username <br>

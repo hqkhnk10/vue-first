@@ -16,7 +16,7 @@ const actions = {
         console.log('register', User)
         await axios.post('https://localhost:44307/api/account',
             { username: User.username, password: User.password, role: 'member' })
-        await dispatch('LogIn', User)
+            await dispatch('LogIn', User)
     },
 
     async LogIn({ commit }, User) {

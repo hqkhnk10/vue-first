@@ -9,19 +9,18 @@
 <el-input size="small" placeholder="Search" style="width:80%;padding-left: 30px;margin-bottom: 10px;">
 </el-input>
       <el-menu 
-      @select="handleSelect"
          :router="true"
       >
         <el-menu-item index="Home" :route="{name:'Home'}">
         <i class="fa fa-home" style="padding-right:10px"></i>
         <span>Home</span>
       </el-menu-item>
-      <el-menu-item index="Dashboard">
+      <el-menu-item index="2" :route="{name:'Dashboard'}">
          <i class="fa fa-dashboard" style="padding-right:10px"></i>
 
         <span>Dashboard</span>
       </el-menu-item>
-      <el-menu-item index="ProductS">
+      <el-menu-item index="3" :route="{name:'ProductS'}">
         <i class="fa fa-database" style="padding-right:10px"></i>
         <span>Products</span>
       </el-menu-item>
@@ -106,15 +105,12 @@ import { mapGetters } from 'vuex'
   methods: {
     async logout (){
         await this.$store.dispatch('LogOut')
+        this.$router.push('/login');
         console.log(this.$store.getters.StateUser)
       },
     test(){
       console.log(this.name)
     },
-    handleSelect(key, keyPath) {
-          this.$router.push({name: key});
-        console.log(key, keyPath);
-      }
   },
   };
 </script>
