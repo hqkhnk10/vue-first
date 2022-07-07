@@ -11,7 +11,7 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 import { routerS } from './utils/constants'
 import store from './store';
-
+import axios from "axios";
 Vue.use(VueRouter)
 
 const routes = [
@@ -112,8 +112,20 @@ const router = new VueRouter({
 
 })
 
+
 router.beforeEach((to, from, next) => {
+
     if (to.matched.some((record) => record.meta.requiresAuth)) {
+        var token = localStorage.getItem('token')
+        console.log(token)
+        axios.get('https://localhost:44307/api/account/login', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then((response) => {
+            console.log("user: " + response)
+        });
+        console.log('route')
         if (store.getters.isAuthenticated) {
             next();
             return;

@@ -50,6 +50,7 @@ data() {
       showError: false
     };
   },
+ 
   methods: {
     ...mapActions(["LogIn"]),
     async submit() {

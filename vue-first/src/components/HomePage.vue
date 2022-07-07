@@ -106,6 +106,7 @@ import { mapGetters } from 'vuex'
     async logout (){
         await this.$store.dispatch('LogOut')
         this.$router.push('/login');
+        localStorage.removeItem('token')
         console.log(this.$store.getters.StateUser)
       },
     test(){

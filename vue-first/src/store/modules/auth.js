@@ -3,10 +3,13 @@ import axios from "axios";
 const state = {
     user: null,
     role: null,
-    token: null,
+    token: localStorage.getItem('token'),
 };
 
+
+
 const getters = {
+    
     isAuthenticated: (state) => !!state.user,
     StateRole: (state) => state.role,
     StateUser: (state) => state.user,
@@ -32,6 +35,7 @@ const actions = {
                 console.log(response)
                 commit('setUser', User.username)
                 commit('setToken', response.data.token)
+                localStorage.setItem('token', response.data.token)
             })
     },
 
