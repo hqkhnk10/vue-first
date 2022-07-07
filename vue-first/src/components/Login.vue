@@ -57,7 +57,7 @@ data() {
       User.username=this.form.username;
       User.password=this.form.password;
       console.log(User);
-
+ 
       try {
           await this.LogIn(User);
           this.$router.push("/homepage");

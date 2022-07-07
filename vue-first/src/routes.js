@@ -38,27 +38,24 @@ const routes = [
     {
         path: '/homepage',
         component: HomePage,
-        meta: { authorize: 'member' },
+        meta: { requiresAuth: true },
         children: [// start nesting routes. All the routes below are sub routes of the main route
 
             {
                 path: routerS.views[2].path,
                 name: 'Home',
                 component: () => import('./views/HomeS'),
-                meta: { authorize: 'member' },
 
             },
             {
                 path: 'dashboard',
                 name: 'Dashboard',
                 component: Dashboard,
-                meta: { authorize: 'member' },
             },
             {
                 path: 'products',
                 name: 'ProductS',
                 component: ProductS,
-                meta: { authorize: 'admin' },
                 children: [{
                     path: 'car/:id',
                     name: 'car',
@@ -116,29 +113,15 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const { authorize } = to.meta;
-    if (authorize) {
-        if (!store.getters.isAuthenticated) {
-            next('/login')
-            return
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
+        if (store.getters.isAuthenticated) {
+            next();
+            return;
         }
-        else {
-            if (store.getters.StateRole == 'admin') {
-                return next();
-            }
-            if (store.getters.StateRole == authorize) {
-                return next();
-            }
-            if (store.getters.StateRole != authorize) {
-                console.log(authorize)
-                next('/unauthorize')
-                return
-            }
-        }
+        next("/login");
+    } else {
+        next();
     }
-    else {
-        next()
-    }
-})
+});
 
 export default router

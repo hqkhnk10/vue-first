@@ -1,5 +1,7 @@
 <template>
 <div>
+  <el-button type="primary" @click="test">Test</el-button>
+
 <el-menu
 class="el-menu-demo"
   mode="horizontal"
@@ -126,8 +128,9 @@ import {carList} from "@/utils/cars"
     import {motorList} from "@/utils/motors"
 import AboutVue from "./About.vue";
 import addChildVue from '@/components/addChild.vue';
-
 import axios from "axios";
+
+
   export default {
      mounted:function(){
     this.refreshData();
@@ -174,6 +177,9 @@ components:{
       }
     },
     methods: {
+      test(){
+        this.refreshData();
+      },
        refreshData(){
         axios.get("https://localhost:44307/api/company")
         .then((response)=>{

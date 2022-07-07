@@ -2,8 +2,6 @@
     <div>
 <el-input v-show="displaySearch" v-model="searchModel"></el-input>
  <el-button type="primary" @click="add">Add</el-button>
- <el-button type="primary" @click="doForm=!doForm">Do List</el-button>
-<div v-show="doForm">{{doList}}</div>
 <dialogue-form 
 :dialogVisible="showDialogueForm"
 :editData="editData"
@@ -74,9 +72,9 @@ import dialogueFormVue from '../components/dialogueForm.vue';
 import axios from "axios";
 
 
-var i=0;
-var doList=[];
+
 export default{
+
   mounted:function(){
     this.refreshData();
 },
@@ -88,7 +86,7 @@ export default{
         return{
             cars:[],PhotoPath:"https://localhost:44307/photos/",
             dialogVisible:false,displaySearch:false,searchModel:'',
-            i,addForm:false,doList,doForm:false,showDialogueForm:false,
+            addForm:false,doForm:false,showDialogueForm:false,
             search:this.$route.params.id,editData:'',AddshowDialogueForm:false,
         deleteDialog:false,storeDelete:'',
         }
@@ -111,8 +109,13 @@ export default{
     },
     methods: {
  refreshData(){
-        axios.get("https://localhost:44307/api/cars/"+this.search)
+        axios.get(`https://localhost:44307/api/cars/${this.search}`, {
+  headers: {
+    'Authorization': `Bearer ${this.$store.getters.StateToken}`
+  }
+})
         .then((response)=>{
+          console.log(response)
             this.cars=response.data;
         });
     },
@@ -160,7 +163,6 @@ axios.delete("https://localhost:44307/api/cars/"+this.storeDelete.car_id)
         this.editData=row;
         this.editData=JSON.stringify(this.editData)
         this.showDialogueForm=!this.showDialogueForm;
-        doList.push('Edit '+ row.brand)
       },
       handleDelete(row) {
         this.deleteDialog=!this.deleteDialog;
@@ -169,7 +171,6 @@ axios.delete("https://localhost:44307/api/cars/"+this.storeDelete.car_id)
       },
       add(){
         this.AddshowDialogueForm=!this.AddshowDialogueForm
-         doList.push('Add '+ this.newBrand)
       }
 
     },
